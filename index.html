@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم | مربع الدراما</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #c5a059;
+  --primary-light: #e0c078;
+  --bg: #12151c;
+  --bg-header: #0e1118;
+  --card: #1a1f29;
+  --card-hover: #202632;
+  --text: #ffffff;
+  --text-muted: #8a94a6;
+  --border: rgba(255,255,255,0.08);
+  --border-soft: rgba(255,255,255,0.05);
+  --red: #e11d2e;
+  --red-light: #ff2e3d;
+  --success: #27ae60;
+  --success-dark: #1e8449;
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Tajawal', sans-serif; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ================= الهيدر ================= */
+.admin-header {
+  background: var(--bg-header);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border-soft);
+}
+.admin-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+.admin-header h2 {
+  font-size: 20px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-header h2 span { color: var(--red-light); }
+.admin-badge {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--card);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success);
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ================= التبويبات ================= */
+.tabs-wrap {
+  background: var(--bg-header);
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 65px;
+  z-index: 99;
+}
+.tabs {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  padding: 16px 24px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 15px;
+  white-space: nowrap;
+  position: relative;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab:hover { color: var(--primary); }
+.tab.active { color: var(--text); }
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+  left: 15px;
+  height: 3px;
+  background: var(--red);
+  border-radius: 3px 3px 0 0;
+}
+
+/* ================= المحتوى ================= */
+.content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+}
+
+.msg {
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  background: linear-gradient(135deg, var(--success), var(--success-dark));
+  color: white;
+  text-align: center;
+  font-weight: 800;
+  font-size: 15px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 8px 25px rgba(39,174,96,0.35);
+  animation: slideIn 0.4s ease;
+}
+.msg.show { display: flex; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-box {
+  background: var(--card);
+  padding: 32px 28px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--red);
+  margin-bottom: 32px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.form-box h3 {
+  color: var(--text);
+  margin-bottom: 26px;
+  font-size: 19px;
+  font-weight: 900;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.form-box h3::before {
+  content: '';
+  width: 5px;
+  height: 22px;
+  background: var(--red);
+  border-radius: 3px;
+}
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block;
+  margin-bottom: 9px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+}
+.form-group label .required { color: var(--red-light); margin-right: 3px; }
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--bg-header);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  transition: 0.3s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(225,29,46,0.15);
+}
+.form-group textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.7;
+}
+.form-group input[type="file"] {
+  padding: 10px;
+  cursor: pointer;
+}
+.form-group input[type="file"]::file-selector-button {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: 0.3s;
+}
+.form-group input[type="file"]::file-selector-button:hover {
+  background: var(--red-light);
+}
+
+.preview-img {
+  margin-top: 12px;
+  max-width: 200px;
+  border-radius: 10px;
+  display: none;
+  border: 2px solid var(--border);
+}
+.preview-video {
+  margin-top: 12px;
+  max-width: 260px;
+  border-radius: 10px;
+  display: none;
+  border: 2px solid var(--border);
+}
+.file-info {
+  color: var(--text-muted);
+  font-size: 12px;
+  display: block;
+  margin-top: 6px;
+}
+.file-info.ok { color: var(--success); font-weight: 700; }
+
+.btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: #12151c;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 900;
+  font-size: 15px;
+  font-family: inherit;
+  transition: 0.3s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 8px 20px rgba(197,160,89,0.25);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(197,160,89,0.4);
+}
+.btn:active { transform: translateY(0); }
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 45px 0 22px;
+}
+.items-header h3 {
+  font-size: 19px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.items-header h3::before {
+  content: '';
+  width: 5px;
+  height: 22px;
+  background: var(--red);
+  border-radius: 3px;
+}
+.items-count {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--card);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+.items-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+.item-card {
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--red);
+  transition: 0.35s;
+}
+.item-card:hover {
+  transform: translateY(-4px);
+  background: var(--card-hover);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+.item-card-thumb {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: var(--bg-header);
+  display: block;
+}
+.item-card-noimg {
+  height: 170px;
+  background: var(--bg-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 32px;
+}
+.item-card-body { padding: 16px; }
+.item-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 42px;
+}
+.item-card-meta {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.item-card-meta span {
+  background: var(--bg-header);
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.item-card-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-danger {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 9px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: inherit;
+  transition: 0.3s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-danger:hover { background: var(--red-light); }
+
+.progress {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-header);
+  border-radius: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+  display: none;
+}
+.progress.show { display: block; }
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), var(--red-light));
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.3s;
+}
+
+@media (max-width: 768px) {
+  .admin-header-inner { padding: 12px 15px; }
+  .admin-header h2 { font-size: 17px; }
+  .admin-badge { font-size: 11px; padding: 5px 10px; }
+  .tabs { padding: 0 12px; }
+  .tab { padding: 14px 16px; font-size: 14px; }
+  .content { padding: 22px 15px 45px; }
+  .form-box { padding: 22px 18px; border-radius: 12px; }
+  .form-box h3 { font-size: 17px; }
+  .items-list { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .item-card-thumb, .item-card-noimg { height: 130px; }
+  .item-card h4 { font-size: 13px; min-height: 36px; }
+  .item-card-body { padding: 12px; }
+  .btn-danger { padding: 8px 10px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="admin-header">
+  <div class="admin-header-inner">
+    <h2>🎬 مربع <span>الدراما</span></h2>
+    <div class="admin-badge">لوحة التحكم</div>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="series">📺 إضافة مسلسل</button>
+    <button class="tab" data-tab="news">📰 نشر خبر</button>
+    <button class="tab" data-tab="sports">⚽ نشر رياضة</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="msg" id="msg">✓ تم النشر بنجاح</div>
+
+  <div class="form-box" id="form-series">
+    <h3>إضافة مسلسل جديد</h3>
+    <div class="form-group">
+      <label>اسم المسلسل <span class="required">*</span></label>
+      <input type="text" id="s-title" placeholder="مثال: الهيبة، الحشاشين...">
+    </div>
+    <div class="form-group">
+      <label>التصنيف</label>
+      <input type="text" id="s-genre" placeholder="دراما، أكشن، كوميدي...">
+    </div>
+    <div class="form-group">
+      <label>سنة الإنتاج</label>
+      <input type="text" id="s-year" placeholder="2026">
+    </div>
+    <div class="form-group">
+      <label>الوصف</label>
+      <textarea id="s-desc" placeholder="وصف تفصيلي للمسلسل..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>صورة الغلاف</label>
+      <input type="file" id="s-image" accept="image/*">
+      <img class="preview-img" id="s-image-preview">
+    </div>
+    <div class="form-group">
+      <label>ملف الفيديو</label>
+      <input type="file" id="s-video" accept="video/*">
+      <video class="preview-video" id="s-video-preview" controls></video>
+      <small class="file-info" id="s-video-info">يمكنك رفع فيديو بأي حجم — يُخزَّن في قاعدة بيانات المتصفح (IndexedDB)</small>
+      <div class="progress" id="s-progress"><div class="progress-bar" id="s-progress-bar"></div></div>
+    </div>
+    <button class="btn" id="s-submit" onclick="saveItem('series')">💾 حفظ المسلسل</button>
+  </div>
+
+  <div class="form-box" id="form-news" style="display:none;">
+    <h3>نشر خبر جديد</h3>
+    <div class="form-group">
+      <label>عنوان الخبر <span class="required">*</span></label>
+      <input type="text" id="n-title" placeholder="عنوان الخبر...">
+    </div>
+    <div class="form-group">
+      <label>محتوى الخبر <span class="required">*</span></label>
+      <textarea id="n-content" placeholder="تفاصيل الخبر..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>صورة الخبر</label>
+      <input type="file" id="n-image" accept="image/*">
+      <img class="preview-img" id="n-image-preview">
+    </div>
+    <button class="btn" id="n-submit" onclick="saveItem('news')">📰 نشر الخبر</button>
+  </div>
+
+  <div class="form-box" id="form-sports" style="display:none;">
+    <h3>نشر خبر رياضي</h3>
+    <div class="form-group">
+      <label>عنوان الخبر الرياضي <span class="required">*</span></label>
+      <input type="text" id="sp-title" placeholder="عنوان الخبر الرياضي...">
+    </div>
+    <div class="form-group">
+      <label>محتوى الخبر <span class="required">*</span></label>
+      <textarea id="sp-content" placeholder="تفاصيل الخبر الرياضي..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>صورة الخبر</label>
+      <input type="file" id="sp-image" accept="image/*">
+      <img class="preview-img" id="sp-image-preview">
+    </div>
+    <button class="btn" id="sp-submit" onclick="saveItem('sports')">⚽ نشر الخبر الرياضي</button>
+  </div>
+
+  <div class="items-header">
+    <h3>المحتوى المنشور</h3>
+    <div class="items-count" id="itemsCount">0 عنصر</div>
+  </div>
+  <div class="items-list" id="itemsList"></div>
+</div>
+
+<script>
+/* ========== IndexedDB ========== */
+const DB_NAME = 'MrabaDramaDB';
+const STORE = 'data';
+const KEY = 'dramaData';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE);
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function getData() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).get(KEY);
+    req.onsuccess = () => {
+      const d = req.result;
+      if (d) {
+        if (!d.series) d.series = [];
+        if (!d.news) d.news = [];
+        if (!d.sports) d.sports = [];
+        resolve(d);
+      } else {
+        resolve({ series: [], news: [], sports: [] });
+      }
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveData(data) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).put(data, KEY);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+/* ========== الحالة ========== */
+let currentTab = 'series';
+let tempData = {};
+
+/* ========== التبويبات ========== */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const t = tab.dataset.tab;
+    currentTab = t;
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.form-box').forEach(f => f.style.display = 'none');
+    document.getElementById('form-' + t).style.display = 'block';
+    renderItems();
+  });
+});
+
+/* ========== معالجة الملفات ========== */
+function setupFileHandlers(prefix) {
+  const imgInput = document.getElementById(prefix + '-image');
+  if (imgInput) {
+    imgInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      tempData[prefix + '-image'] = file;
+      const url = URL.createObjectURL(file);
+      const prev = document.getElementById(prefix + '-image-preview');
+      prev.src = url;
+      prev.style.display = 'block';
+    });
+  }
+
+  const vidInput = document.getElementById(prefix + '-video');
+  if (vidInput) {
+    vidInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      tempData[prefix + '-video'] = file;
+
+      const url = URL.createObjectURL(file);
+      const prev = document.getElementById(prefix + '-video-preview');
+      prev.src = url;
+      prev.style.display = 'block';
+
+      const info = document.getElementById(prefix + '-video-info');
+      const sizeMB = (file.size / 1024 / 1024).toFixed(2);
+      info.textContent = `✓ تم اختيار الفيديو (${sizeMB} MB) — سيتم تخزينه بدون حد أقصى`;
+      info.classList.add('ok');
+    });
+  }
+}
+
+setupFileHandlers('s');
+setupFileHandlers('n');
+setupFileHandlers('sp');
+
+/* ========== حفظ عنصر (مع createdAt) ========== */
+async function saveItem(type) {
+  const btn = document.getElementById(
+    type === 'series' ? 's-submit' : type === 'news' ? 'n-submit' : 'sp-submit'
+  );
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الحفظ...';
+
+  try {
+    const data = await getData();
+    if (!data.sports) data.sports = [];
+    let item = {};
+
+    const now = Date.now(); // ← مهم: الوقت الحالي بالمللي ثانية
+
+    if (type === 'series') {
+      const title = document.getElementById('s-title').value.trim();
+      if (!title) { alert('أدخل اسم المسلسل'); return; }
+      item = {
+        title,
+        genre: document.getElementById('s-genre').value.trim() || 'دراما',
+        year: document.getElementById('s-year').value.trim() || new Date().getFullYear().toString(),
+        desc: document.getElementById('s-desc').value.trim(),
+        image: tempData['s-image'] || null,
+        video: tempData['s-video'] || null,
+        date: new Date().toLocaleDateString('ar-EG'),
+        createdAt: now  // ← ✅ إضافة createdAt
+      };
+    } else if (type === 'news') {
+      const title = document.getElementById('n-title').value.trim();
+      const content = document.getElementById('n-content').value.trim();
+      if (!title || !content) { alert('أكمل الحقول المطلوبة'); return; }
+      item = {
+        title,
+        content,
+        image: tempData['n-image'] || null,
+        date: new Date().toLocaleDateString('ar-EG'),
+        createdAt: now  // ← ✅ إضافة createdAt
+      };
+    } else if (type === 'sports') {
+      const title = document.getElementById('sp-title').value.trim();
+      const content = document.getElementById('sp-content').value.trim();
+      if (!title || !content) { alert('أكمل الحقول المطلوبة'); return; }
+      item = {
+        title,
+        content,
+        image: tempData['sp-image'] || null,
+        date: new Date().toLocaleDateString('ar-EG'),
+        createdAt: now  // ← ✅ إضافة createdAt
+      };
+    }
+
+    data[type].unshift(item);
+    await saveData(data);
+
+    const prefix = type === 'series' ? 's' : type === 'news' ? 'n' : 'sp';
+    document.querySelectorAll(`#form-${type} input, #form-${type} textarea`).forEach(i => {
+      if (i.type !== 'file') i.value = '';
+      else i.value = '';
+    });
+    document.querySelectorAll(`#form-${type} .preview-img, #form-${type} .preview-video`).forEach(p => {
+      p.style.display = 'none';
+      if (p.src && p.src.startsWith('blob:')) URL.revokeObjectURL(p.src);
+      p.src = '';
+    });
+    const info = document.getElementById(prefix + '-video-info');
+    if (info) {
+      info.textContent = 'يمكنك رفع فيديو بأي حجم — يُخزَّن في قاعدة بيانات المتصفح (IndexedDB)';
+      info.classList.remove('ok');
+    }
+    tempData = {};
+
+    showMsg('✓ تم النشر بنجاح');
+    renderItems();
+  } catch (err) {
+    console.error(err);
+    alert('حدث خطأ أثناء الحفظ: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = type === 'series' ? '💾 حفظ المسلسل' :
+                      type === 'news' ? '📰 نشر الخبر' : '⚽ نشر الخبر الرياضي';
+  }
+}
+
+/* ========== رسالة النجاح ========== */
+function showMsg(text) {
+  const msg = document.getElementById('msg');
+  msg.textContent = text;
+  msg.classList.add('show');
+  setTimeout(() => msg.classList.remove('show'), 2500);
+}
+
+/* ========== عرض المحتوى ========== */
+async function renderItems() {
+  const data = await getData();
+  if (!data.sports) data.sports = [];
+  const list = document.getElementById('itemsList');
+  const countEl = document.getElementById('itemsCount');
+  const items = data[currentTab] || [];
+
+  countEl.textContent = items.length + ' عنصر';
+
+  if (items.length === 0) {
+    list.innerHTML = '<div style="color:var(--text-muted); padding:40px 20px; text-align:center; grid-column:1/-1; background:var(--card); border-radius:12px; border:1px dashed var(--border);">لا يوجد محتوى منشور في هذا القسم</div>';
+    return;
+  }
+
+  const htmls = await Promise.all(items.map(async (it, i) => {
+    let thumbHTML = '<div class="item-card-noimg">🖼️</div>';
+    if (it.image) {
+      try {
+        const url = it.image instanceof Blob ? URL.createObjectURL(it.image) : it.image;
+        thumbHTML = `<img class="item-card-thumb" src="${url}" alt="${it.title}">`;
+      } catch (e) {}
+    }
+
+    let meta = '';
+    if (currentTab === 'series') {
+      meta = `<span>${it.genre || 'دراما'}</span><span>${it.year || ''}</span>`;
+      if (it.video) meta += `<span>🎬 فيديو</span>`;
+    } else {
+      meta = `<span>${it.date || ''}</span>`;
+    }
+
+    return `
+      <div class="item-card">
+        ${thumbHTML}
+        <div class="item-card-body">
+          <h4>${it.title}</h4>
+          <div class="item-card-meta">${meta}</div>
+          <div class="item-card-actions">
+            <button class="btn-danger" onclick="deleteItem(${i})">🗑️ حذف</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }));
+
+  list.innerHTML = htmls.join('');
+}
+
+/* ========== حذف عنصر ========== */
+async function deleteItem(index) {
+  if (!confirm('هل أنت متأكد من الحذف؟')) return;
+  const data = await getData();
+  if (!data.sports) data.sports = [];
+  data[currentTab].splice(index, 1);
+  await saveData(data);
+  renderItems();
+}
+
+/* ========== تشغيل ========== */
+renderItems();
+</script>
+</body>
+</html>
